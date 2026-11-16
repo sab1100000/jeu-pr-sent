@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>¡El misterio de los verbos!</title>
+<style>
+:root{--bg1:#4a1d6b;--bg2:#7a2a78;--card:#fff8ec;--ink:#2b1538;--or:#ff8a1f;--ye:#ffc928;--pk:#e8338f;--vi:#6a2c91;--tq:#14b8a6;--ok:#12805c;--ko:#c62839;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%,#c2437a);min-height:100vh;font-size:20px}
+.flags{display:flex;overflow:hidden;height:34px}.flags i{flex:0 0 46px;height:34px;clip-path:polygon(0 0,100% 0,100% 70%,50% 100%,0 70%);margin-right:4px}
+header{position:sticky;top:0;z-index:5;background:#2b1538ee;color:#fff;padding:8px 14px;display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;font-size:17px}
+header b{color:var(--ye)}header .bar{flex:1 1 160px;height:12px;background:#ffffff33;border-radius:9px;overflow:hidden}header .bar div{height:100%;background:linear-gradient(90deg,var(--or),var(--ye));width:0;transition:width .5s}
+main{max-width:860px;margin:0 auto;padding:14px}
+.card{background:var(--card);border-radius:22px;padding:22px;box-shadow:0 8px 0 #0003;border:4px solid var(--ye)}
+h1{font-size:2.1em;margin:.1em 0;color:var(--vi);text-align:center;line-height:1.1}h2{color:var(--vi);margin:.2em 0}
+.sub{text-align:center;color:var(--pk);font-weight:bold;font-size:1.2em}
+.big{font-size:4em;text-align:center;letter-spacing:6px}
+button{font:inherit;cursor:pointer;border:0;border-radius:16px;padding:12px 20px;font-weight:bold;color:#fff;background:var(--pk);box-shadow:0 5px 0 #0003;min-height:52px}
+button:active{transform:translateY(3px);box-shadow:0 2px 0 #0003}button:disabled{opacity:.45}
+.go{background:var(--or);font-size:1.15em;display:block;margin:16px auto 0}
+input[type=text]{font:inherit;width:100%;padding:12px;border-radius:14px;border:3px solid var(--vi);background:#fff;color:var(--ink);text-align:center;font-size:1.2em}
+input[type=text]:focus{outline:4px solid var(--ye)}
+.map{display:flex;justify-content:center;gap:8px;margin:14px 0;flex-wrap:wrap}
+.map span{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:bold;background:#d9cbe3;color:#6b5a78;border:3px solid #fff}
+.map .done{background:var(--tq);color:#fff}.map .cur{background:var(--or);color:#fff;animation:pul 1s infinite alternate}
+@keyframes pul{to{transform:scale(1.18)}}
+.prompt{font-size:1.5em;text-align:center;margin:10px 0 16px;line-height:1.5}.step{color:var(--tq);font-weight:bold;text-align:center;text-transform:uppercase;font-size:.75em;letter-spacing:1px}
+.stem{color:var(--pk);font-weight:bold}
+.choices{display:grid;gap:12px}.choices button{font-size:1.35em}
+.choices button:nth-child(1){background:var(--vi)}.choices button:nth-child(2){background:var(--tq)}.choices button:nth-child(3){background:var(--or)}
+.acc{display:flex;gap:8px;justify-content:center;margin:10px 0;flex-wrap:wrap}.acc button{background:var(--vi);padding:8px 16px;font-size:1.2em;min-height:46px}
+.fb{margin-top:14px;padding:14px;border-radius:14px;font-size:.95em;animation:pop .35s}.fb.ok{background:#d5f5e8;color:#0b5a40}.fb.ko{background:#ffe1e4;color:#8e1b29}.fb.hint{background:#fff0c2;color:#6b4a00}
+@keyframes pop{from{transform:scale(.8);opacity:0}}
+.lesson{background:#fff;border-left:8px solid var(--tq);padding:10px 16px;border-radius:12px;margin:12px 0;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:.85em}td,th{border:2px solid #e3d2f0;padding:6px 8px;text-align:center}th{background:#f1e5fa}
+.zones{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}.zone{min-height:150px;border:4px dashed var(--vi);border-radius:16px;padding:8px;background:#fff;cursor:pointer}
+.zone h3{margin:0 0 6px;font-size:.8em;text-align:center;color:var(--vi)}.pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:60px}
+.chip{background:var(--pk);color:#fff;padding:8px 14px;border-radius:12px;font-weight:bold;cursor:grab;display:inline-block;margin:3px;user-select:none;font-size:.95em}
+.chip.sel{outline:4px solid var(--ye);transform:scale(1.1)}.chip.lock{background:var(--ok);cursor:default}.chip.shake,.zone.shake{animation:sh .4s}
+@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.toast{position:fixed;left:50%;top:80px;transform:translateX(-50%);background:var(--ye);color:var(--ink);padding:14px 26px;border-radius:30px;font-weight:bold;z-index:20;animation:fl 2.2s forwards;font-size:1.2em}
+@keyframes fl{0%{opacity:0;top:100px}15%,80%{opacity:1;top:80px}100%{opacity:0;top:60px}}
+.star{position:fixed;font-size:2.4em;pointer-events:none;z-index:15;animation:up 1.2s forwards}@keyframes up{to{transform:translateY(-140px) rotate(40deg);opacity:0}}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.row button.sec{background:var(--vi)}
+.note20{font-size:3em;color:var(--or);text-align:center;font-weight:bold}
+#bilan .ok{color:var(--ok)}#bilan .ko{color:var(--ko)}
+@media(max-width:560px){body{font-size:17px}.zones{grid-template-columns:1fr}h1{font-size:1.6em}}
+@media print{body{background:#fff}header,.flags,.noprint{display:none!important}.card{box-shadow:none;border:2px solid #999}}
+</style>
+</head>
+<body>
+<div class="flags" id="flags"></div>
+<header id="hud" style="display:none"></header>
+<main id="app"></main>
+<script>
+const P=["Yo","Tú","Él/Ella","Nosotros","Vosotros","Ellos/Ellas"],
+E={ar:["o","as","a","amos","áis","an"],er:["o","es","e","emos","éis","en"],ir:["o","es","e","imos","ís","en"]},
+V={ar:["bailar","cantar","hablar","decorar","preparar"],er:["comer","beber","aprender","correr"],ir:["vivir","escribir","abrir","recibir"]},
+ALL=[].concat(V.ar,V.er,V.ir),
+st=v=>v.slice(0,-2),gr=v=>v.slice(-2),cj=(v,i)=>st(v)+E[gr(v)][i],
+sh=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]),
+esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])),
+norm=s=>s.trim().toLowerCase().replace(/^-+/,"").replace(/\s+/g," "),
+SEN=[[0,"decorar","Yo","el altar"],[1,"comer","Tú","pan de muerto"],[3,"vivir","Nosotros","en México"],[2,"bailar","Ella","durante la fiesta"],[4,"beber","Vosotros","chocolate caliente"],[5,"escribir","Ellos","los nombres"],[0,"cantar","Yo","una canción"],[1,"aprender","Tú","español"],[3,"recibir","Nosotros","a la familia"],[5,"preparar","Ellas","las flores"],[0,"abrir","Yo","la puerta"],[1,"hablar","Tú","con la abuela"],[2,"correr","Él","por la plaza"],[4,"decorar","Vosotros","las tumbas"],[3,"cantar","Nosotros","en el cementerio"],[5,"comer","Ellos","tamales"],[0,"beber","Yo","agua de jamaica"],[2,"escribir","Ella","una carta"],[1,"recibir","Tú","un regalo"],[5,"bailar","Ellos","con las calaveras"]],
+FORMS=[["canto","cantar"],["bailas","bailar"],["comemos","comer"],["beben","beber"],["vivo","vivir"],["escribís","escribir"],["habla","hablar"],["aprende","aprender"],["reciben","recibir"],["decoramos","decorar"],["corres","correr"],["abrimos","abrir"],["preparan","preparar"],["vivís","vivir"]],
+GN={ar:"GRUPO 1 · -AR",er:"GRUPO 2 · -ER",ir:"GRUPO 3 · -IR"};
+const S={name:"",m:0,score:0,ok:0,ko:0,res:[],q:[],i:0,max:0};
+const $=id=>document.getElementById(id),R=h=>{$("app").innerHTML=h;window.scrollTo(0,0)};
+$("flags").innerHTML=Array.from({length:40},(_,i)=>`<i style="background:${["#ff8a1f","#e8338f","#ffc928","#14b8a6","#8e44ad"][i%5]}"></i>`).join("");
+function tbl(g){return `<table><tr>${P.map(p=>`<th>${p}</th>`).join("")}</tr><tr>${E[g].map(e=>`<td><b>-${e}</b></td>`).join("")}</tr></table>`}
+const LES=g=>`<div class="lesson">📘 <b>${st(V[g][0]).toUpperCase()}${gr(V[g][0]).toUpperCase()}</b> : radical + terminaison.<br>${V[g][0]} = <span class="stem">${st(V[g][0])}</span> + ${gr(V[g][0])}${tbl(g)}</div>`;
+const MS=[
+{t:"Clasifica los verbos",o:"Découvre les 3 groupes de verbes : -AR, -ER, -IR.",les:`<div class="lesson">📘 En español, hay tres grupos de verbos regulares :<br>• <b>AR</b> : bailar, cantar…<br>• <b>ER</b> : comer, beber…<br>• <b>IR</b> : vivir, escribir…</div>`},
+{t:"Encuentra el infinitivo",o:"Retrouve l’infinitif à partir du verbe conjugué.",les:`<div class="lesson">📘 Cherche le <b>radical</b> (le début du verbe), puis ajoute -ar, -er ou -ir. <br>canto → <span class="stem">cant</span>o → cantar</div>`},
+{t:"Los verbos en -AR",o:"Radical, terminaisons, puis conjugue bailar et decorar.",les:LES("ar")},
+{t:"Los verbos en -ER",o:"Même méthode avec comer et beber.",les:LES("er")},
+{t:"Los verbos en -IR",o:"Même méthode avec vivir et escribir.",les:LES("ir")},
+{t:"¡A mezclar los verbos!",o:"Complète les phrases : écris le verbe conjugué.",les:`<div class="lesson">📘 Trouve le pronom → trouve le groupe → radical + bonne terminaison.</div>${tbl("ar")}${tbl("er")}${tbl("ir")}`},
+{t:"EL GRAN DESAFÍO FINAL",o:"12 questions. Tout ce que tu as appris !",les:`<div class="lesson">🏆 ¡Bravo! Tu sais former le présent de l’indicatif des verbes réguliers.</div>`}];
+const rad=(v,pts,s)=>({k:"t",s:s||"El radical",p:`Quel est le radical de <b>${v.toUpperCase()}</b> ?<br><small>${v.toUpperCase()} = ? + ${gr(v).toUpperCase()}</small>`,a:[st(v)],pts,h:`Enlève -${gr(v)} à la fin. Le radical commence par « ${st(v)[0]} ».`,tip:`${v.toUpperCase()} = <span class="stem">${st(v).toUpperCase()}</span> + ${gr(v).toUpperCase()}`});
+const end=(v,i,pts,s)=>({k:"t",s:s||"La terminación",p:`Verbe <b>${v}</b> · pronom <b>${P[i].toUpperCase()}</b><br>Quelle terminaison ? <small>(seulement la fin, ex. -o)</small>`,a:[E[gr(v)][i]],pts,h:`Terminaisons -${gr(v).toUpperCase()} : ${E[gr(v)].map(e=>"-"+e).join(" · ")}`,tip:`${P[i]} → -${E[gr(v)][i]}`});
+const cjq=(v,i,pts,s)=>({k:"t",s:s||"Conjuga",p:`${P[i]} <b>_____</b> (${v})<br><small>radical <span class="stem">${st(v)}-</span> + terminaison</small>`,a:[cj(v,i)],pts,h:`${st(v)}- + la terminaison de « ${P[i]} » (-${E[gr(v)][i][0]}…). Commence par « ${st(v)}${E[gr(v)][i][0]} ».`,tip:`${st(v)} + ${E[gr(v)][i]} = <b>${cj(v,i)}</b>`});
+const sen=(x,pts)=>({k:"t",s:"Completa la frase",p:`${x[2]} <b>______</b> (${x[1]}) ${x[3]}.`,a:[cj(x[1],x[0])],pts,h:`${x[1]} → groupe -${gr(x[1]).toUpperCase()}. Radical ${st(x[1])}- + terminaison de « ${P[x[0]]} ».`,tip:`${st(x[1])} + ${E[gr(x[1])][x[0]]} = <b>${cj(x[1],x[0])}</b>`});
+function build(m){
+ if(m==1){return sh(FORMS).slice(0,10).map(([f,inf])=>{const o=sh([inf,...sh(ALL.filter(v=>v!=inf)).slice(0,2)]);return{k:"c",s:"¿Cuál es el infinitivo?",p:`<span class="stem" style="font-size:1.6em">${f}</span>`,o,a:[inf],pts:10,h:`Enlève la terminaison de « ${f} » : le radical est ${st(inf)}-.`,tip:`${f} = ${st(inf)} + ${f.slice(st(inf).length)} → <b>${inf}</b>`}})}
+ if(m>=2&&m<=4){const g=["ar","er","ir"][m-2],vs=V[g],r=[];
+  r.push(rad(vs[1==0?0:1],10,"1 · Descubre el radical"),rad(vs[3]||vs[0],10,"1 · Descubre el radical"));
+  P.forEach((_,i)=>r.push(end(vs[0],i,20,"2 · Las terminaciones")));
+  const two=g=="ar"?["bailar","decorar"]:g=="er"?["comer","beber"]:["vivir","escribir"];
+  two.forEach(v=>P.forEach((_,i)=>r.push(cjq(v,i,20,"3 · Conjuga "+v.toUpperCase()))));return r}
+ if(m==5)return sh(SEN).slice(0,15).map(x=>sen(x,20));
+ const vs=sh(ALL),r=[];
+ [0,1].forEach(n=>{const v=vs[n];r.push({k:"t",s:"Los grupos",p:`Le verbe <b>${v}</b> est de quel groupe ?<br><small>Écris ar, er ou ir</small>`,a:[gr(v)],pts:40,h:"Regarde les deux dernières lettres.",tip:`${v} → ${GN[gr(v)]}`})});
+ [2,3].forEach(n=>r.push(rad(vs[n],40,"El radical")));
+ [4,5].forEach(n=>r.push(end(vs[n],Math.floor(Math.random()*6),40,"La terminación")));
+ return r.concat(sh(SEN).slice(0,6).map(x=>sen(x,40)))}
+function hud(){const h=$("hud");h.style.display="flex";const tot=S.res.length;
+ h.innerHTML=`<span>💀 <b>${S.score}</b> pts</span><span>Misión <b>${Math.min(S.m+1,7)}</b>/7</span><span>✔ <b>${S.ok}</b></span><span>✘ ${S.ko}</span><div class="bar"><div style="width:${Math.round(tot/7*100)}%"></div></div>`}
+function map(){return `<div class="map">${MS.map((_,i)=>`<span class="${i<S.res.length?"done":i==S.m?"cur":""}">${i<S.res.length?"✓":i+1}</span>`).join("")}</div>`}
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2300)}
+function stars(){for(let i=0;i<6;i++){const s=document.createElement("div");s.className="star";s.textContent=["🌼","✨","🌺","💛"][i%4];s.style.left=(25+Math.random()*50)+"vw";s.style.top=(40+Math.random()*25)+"vh";document.body.appendChild(s);setTimeout(()=>s.remove(),1300)}}
+function add(p){const b=Math.floor(S.score/100);S.score+=p;S.cur.e+=p;if(Math.floor(S.score/100)>b){toast("🌼 ¡Nuevo nivel! "+S.score+" puntos");}stars();hud()}
+function home(){$("hud").style.display="none";R(`<div class="card"><div class="big">💀🌼🕯️</div><h1>¡EL MISTERIO DE LOS VERBOS!</h1><div class="sub">Una aventura en México</div>
+<p>¡Bienvenido a México! Para preparar el Día de Muertos, tienes que superar 7 misiones. ¡Demuestra que sabes conjugar los verbos!</p>${map()}
+<input type="text" id="nm" placeholder="Prénom et nom" autocomplete="off" maxlength="40"><button class="go" onclick="start()">COMENZAR LA AVENTURA</button></div>`)}
+function start(){const n=$("nm").value.trim();if(!n){$("nm").focus();$("nm").classList.add("shake");return}
+ Object.assign(S,{name:n,m:0,score:0,ok:0,ko:0,res:[]});intro()}
+function intro(){hud();const m=S.m,d=MS[m];S.cur={e:0,p:0,ok:0,ko:0};
+ R(`<div class="card">${map()}<h2>Misión ${m+1} · ${d.t}</h2><div class="big" style="font-size:3em">${["🌼","🔍","💃","🍞","📜","🎭","🏆"][m]}</div><p style="text-align:center">${d.o}</p><button class="go" onclick="play()">¡Empezar!</button></div>`)}
+function play(){const m=S.m;if(m==0)return m1();S.q=build(m);S.i=0;S.cur.p=S.q.reduce((a,q)=>a+q.pts,0);ask()}
+let focusIn=null;
+function ask(){hud();const q=S.q[S.i];q.t=0;q.hint=false;
+ const n=`<div class="step">${q.s} · ${S.i+1}/${S.q.length} · ${q.pts} pts</div>`;
+ const body=q.k=="c"?`<div class="choices" id="ch">${q.o.map(o=>`<button onclick="pick(this,'${o}')">${o}</button>`).join("")}</div>`
+ :`<input type="text" id="an" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Escribe aquí…" onkeydown="if(event.key=='Enter')sub()"><div class="acc">${["á","é","í","ó","ú","ñ"].map(c=>`<button type="button" onmousedown="event.preventDefault()" onclick="ins('${c}')">${c}</button>`).join("")}</div><button class="go" id="vb" onclick="sub()">VALIDAR</button>`;
+ R(`<div class="card">${n}<div class="prompt">${q.p}</div>${body}<div id="fb"></div></div>`);
+ if(q.k=="t")$("an").focus()}
+function ins(c){const i=$("an");if(!i||i.disabled)return;const a=i.selectionStart??i.value.length,b=i.selectionEnd??a;i.value=i.value.slice(0,a)+c+i.value.slice(b);i.focus();i.setSelectionRange(a+1,a+1)}
+function pick(b,v){fin(S.q[S.i],v,b)}
+function sub(){const i=$("an");if(!i.value.trim())return;fin(S.q[S.i],i.value,i)}
+function fin(q,v,el){const good=q.a.includes(norm(v));
+ if(good){S.ok++;S.cur.ok++;const p=q.hint?Math.ceil(q.pts/2):q.pts;add(p);done(q,`<div class="fb ok">✅ ¡Muy bien! +${p} pts${q.hint?" (avec indice)":""}<br>${q.tip}</div>`);return}
+ if(!q.hint){q.hint=true;if(q.k=="c")el.disabled=true;else{el.select();}$("fb").innerHTML=`<div class="fb hint">💡 Pas tout à fait. Indice : ${q.h}<br><small>Réessaie (points réduits).</small></div>`;return}
+ S.ko++;S.cur.ko++;hud();done(q,`<div class="fb ko">❌ La réponse était : <b>${q.a[0]}</b><br>${q.tip}</div>`)}
+function done(q,f){document.querySelectorAll("#ch button,#an,#vb,.acc button").forEach(e=>e.disabled=true);
+ $("fb").innerHTML=f+`<button class="go" onclick="next()">${S.i+1<S.q.length?"SIGUIENTE ➜":"VER RESULTADO ➜"}</button>`}
+function next(){S.i++;S.i<S.q.length?ask():result()}
+/* Mission 1 */
+function m1(){const vs=sh("bailar cantar hablar decorar comer beber aprender correr vivir escribir abrir recibir".split(" "));S.m1={vs,placed:{},err:{},sel:null};S.cur.p=120;drawM1()}
+function drawM1(){hud();const M=S.m1,left=M.vs.filter(v=>!M.placed[v]);
+ R(`<div class="card"><div class="step">Arrastra o toca un verbo, luego toca su grupo</div><div class="pool" id="pool">${left.map(v=>`<span class="chip${M.sel==v?" sel":""}" draggable="true" data-v="${v}" onclick="selv('${v}')" ondragstart="event.dataTransfer.setData('t','${v}');M1s('${v}')">${v}</span>`).join("")||"🎉"}</div>
+ <div class="zones">${["ar","er","ir"].map(g=>`<div class="zone" id="z${g}" ondragover="event.preventDefault()" ondrop="event.preventDefault();drop('${g}',event.dataTransfer.getData('t'))" onclick="drop('${g}',S.m1.sel)"><h3>${GN[g]}</h3>${M.vs.filter(v=>M.placed[v]==g).map(v=>`<span class="chip lock">${v}</span>`).join("")}</div>`).join("")}</div><div id="fb"></div></div>`)}
+function M1s(v){S.m1.sel=v}
+function selv(v){S.m1.sel=v;drawM1()}
+function drop(g,v){const M=S.m1;if(!v)return;
+ if(gr(v)==g){M.placed[v]=g;const p=M.err[v]?5:10;S.ok++;S.cur.ok++;M.sel=null;add(p);drawM1();if(M.vs.every(x=>M.placed[x]))setTimeout(result,700)}
+ else{M.err[v]=1;S.ko++;S.cur.ko++;hud();const z=$("z"+g);z.classList.add("shake");$("fb").innerHTML=`<div class="fb hint">💡 « ${v} » n’est pas ici. Indice : regarde les deux dernières lettres du verbe.</div>`;setTimeout(()=>z.classList.remove("shake"),500)}}
+function result(){S.res.push({...S.cur,t:MS[S.m].t});const c=S.cur,pc=Math.round(c.e/c.p*100);hud();toast("🏅 ¡Misión "+(S.m+1)+" superada!");
+ R(`<div class="card">${map()}<h2>Misión ${S.m+1} terminada</h2><div class="note20">${c.e}/${c.p}</div><p style="text-align:center">${pc}% · ✔ ${c.ok} · ✘ ${c.ko}</p>${MS[S.m].les}<button class="go" onclick="S.m++;S.m<7?intro():bilan()">${S.m<6?"SIGUIENTE MISIÓN ➜":"VER MI BILAN 🏆"}</button></div>`)}
+function bilan(){hud();const e=S.res.reduce((a,r)=>a+r.e,0),p=S.res.reduce((a,r)=>a+r.p,0),n=(e/p*20).toFixed(1).replace(".",","),pc=Math.round(e/p*100),
+ K=["Reconnaître les 3 groupes","Retrouver l’infinitif","Conjuguer les verbes en -AR","Conjuguer les verbes en -ER","Conjuguer les verbes en -IR","Conjuguer des verbes mélangés","Maîtriser le présent (épreuve finale)"];
+ R(`<div class="card" id="bilan"><div class="big" style="font-size:2.5em">🎉💀🌼</div><h1>¡Felicidades, ${esc(S.name)}!</h1>
+ <p style="text-align:center">${new Date().toLocaleString("fr-FR")}</p><div class="note20">${n} / 20</div><p style="text-align:center"><b>${e}</b> / ${p} points · ${pc}% · <span class="ok">✔ ${S.ok}</span> · <span class="ko">✘ ${S.ko}</span></p>
+ <table><tr><th>Mission</th><th>Points</th><th>%</th><th>✔</th><th>✘</th></tr>${S.res.map((r,i)=>`<tr><td>${i+1}. ${r.t}</td><td>${r.e}/${r.p}</td><td>${Math.round(r.e/r.p*100)}%</td><td>${r.ok}</td><td>${r.ko}</td></tr>`).join("")}</table>
+ <h3>Compétences maîtrisées (≥ 70 %)</h3><ul>${S.res.map((r,i)=>r.e/r.p>=.7?`<li>✅ ${K[i]}</li>`:"").join("")||"<li>—</li>"}</ul>
+ <h3>À retravailler</h3><ul>${S.res.map((r,i)=>r.e/r.p<.7?`<li>🔁 ${K[i]}</li>`:"").join("")||"<li>Rien ! Excellent travail.</li>"}</ul>
+ <div class="row noprint"><button class="go" onclick="dlPdf()">TÉLÉCHARGER MON BILAN EN PDF</button><button class="go sec" onclick="home()">RECOMENZAR LA AVENTURA</button></div>
+ <p class="noprint" style="text-align:center;font-size:.7em">Confirme l’enregistrement quand le navigateur le demande.</p><p id="pdfmsg" class="noprint" style="text-align:center;font-size:.8em"></p></div>`)}
+const KK=["Reconnaitre les 3 groupes","Retrouver l'infinitif","Conjuguer les verbes en -AR","Conjuguer les verbes en -ER","Conjuguer les verbes en -IR","Conjuguer des verbes melanges","Maitriser le present (epreuve finale)"];
+function mkPdf(L){const pages=[];let cur=[],y=800;
+ L.forEach(l=>{const h=l.s+7;if(y-h<45){pages.push(cur);cur=[];y=800}y-=h;cur.push({...l,y})});pages.push(cur);
+ const enc=s=>String(s).replace(/[’‘]/g,"'").replace(/[“”]/g,'"').replace(/[–—]/g,"-").replace(/[^\x20-\xFF]/g,"?").replace(/[\\()]/g,"\\$&");
+ let o="%PDF-1.4\n";const off=[];const add=(n,b)=>{off[n]=o.length;o+=n+" 0 obj\n"+b+"\nendobj\n"};
+ add(1,"<< /Type /Catalog /Pages 2 0 R >>");add(2,`<< /Type /Pages /Kids [${pages.map((_,k)=>(5+2*k)+" 0 R").join(" ")}] /Count ${pages.length} >>`);
+ add(3,"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");add(4,"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>");
+ pages.forEach((p,k)=>{const c=p.map(l=>`BT /${l.b?"F2":"F1"} ${l.s} Tf 50 ${l.y} Td (${enc(l.t)}) Tj ET`).join("\n");
+  add(5+2*k,`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${6+2*k} 0 R >>`);add(6+2*k,`<< /Length ${c.length} >>\nstream\n${c}\nendstream`)});
+ const tot=5+2*pages.length,x=o.length;o+=`xref\n0 ${tot}\n0000000000 65535 f \n`;for(let i=1;i<tot;i++)o+=String(off[i]).padStart(10,"0")+" 00000 n \n";
+ o+=`trailer\n<< /Size ${tot} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF`;
+ const u=new Uint8Array(o.length);for(let i=0;i<o.length;i++)u[i]=o.charCodeAt(i)&255;return u}
+async function dlPdf(){const e=S.res.reduce((a,r)=>a+r.e,0),p=S.res.reduce((a,r)=>a+r.p,0),n=(e/p*20).toFixed(1).replace(".",","),pc=Math.round(e/p*100),
+ L=[{t:"EL MISTERIO DE LOS VERBOS - Bilan",s:20,b:1},{t:"Eleve : "+S.name,s:14,b:1},{t:"Date : "+new Date().toLocaleString("fr-FR"),s:12},{t:"",s:8},
+ {t:"Note finale : "+n+" / 20",s:18,b:1},{t:`Score : ${e} / ${p} points  -  Reussite : ${pc} %`,s:13},{t:`Bonnes reponses : ${S.ok}   -   Mauvaises reponses : ${S.ko}`,s:13},{t:"",s:8},{t:"Resultats par mission",s:14,b:1}];
+ S.res.forEach((r,i)=>L.push({t:`${i+1}. ${r.t} : ${r.e}/${r.p} pts (${Math.round(r.e/r.p*100)} %) - bonnes : ${r.ok} - fausses : ${r.ko}`,s:11}));
+ L.push({t:"",s:8},{t:"Competences maitrisees (>= 70 %)",s:14,b:1});
+ let a=0;S.res.forEach((r,i)=>{if(r.e/r.p>=.7){a=1;L.push({t:"- "+KK[i],s:11})}});if(!a)L.push({t:"-",s:11});
+ L.push({t:"",s:8},{t:"A retravailler",s:14,b:1});a=0;S.res.forEach((r,i)=>{if(r.e/r.p<.7){a=1;L.push({t:"- "+KK[i],s:11})}});if(!a)L.push({t:"Rien ! Excellent travail.",s:11});
+ const m=$("pdfmsg");let d=null;try{d=await claude.use("downloads")}catch(_){}
+ if(!d){window.print();return}
+ try{await d.save({filename:"bilan-"+S.name.replace(/[^\w-]+/g,"_")+".pdf",data:mkPdf(L)});m.textContent="✅ Bilan enregistré."}catch(err){m.textContent=err&&err.code=="declined"?"Enregistrement annulé.":"Téléchargement impossible ici : ouvre le fichier HTML dans ton navigateur ou utilise Ctrl+P."}}
+home();
+</script>
+</body>
+</html>
